@@ -1,0 +1,67 @@
+<script lang="ts">
+    import Home from "./pages/Home.svelte";
+    import logo from "./assets/rlbot.png";
+
+    const activePage = "home";
+</script>
+
+<main>
+    <div class="navbar">
+        <div>
+            <img class="logo" src={logo} alt="logo" />
+            <h1>RLBot</h1>
+        </div>
+        <div class="navbuttons">
+            <button>Events</button>
+            <button>State Setting Sandbox</button>
+            <button>Story Mode</button>
+            <div class="spacer"></div>
+            <div class="dropdown">
+                <button>Menu</button>
+                <div class="dropmenu right">
+                    <button>Repair botpack</button>
+                    <button>Sample button</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {#if activePage == "home"}
+        <Home />
+    {/if}
+</main>
+
+<style>
+    main {
+        display: flex;
+        flex-direction: column;
+    }
+    .navbar {
+        display: flex;
+        height: 3rem;
+        justify-content: space-between;
+        padding: 0.1rem;
+        /* background: var(--background-alt);
+        color: var(--foreground-alt); */
+    }
+    .navbar > div {
+        display: flex;
+        align-items: center;
+    }
+    h1 {
+        margin: 0px;
+    }
+    .logo {
+        height: 3rem;
+        margin-right: 1rem;
+    }
+    .navbuttons > * {
+        margin: 0px 0.25rem;
+    }
+    .navbar .dropmenu {
+        padding: 0.2rem;
+    }
+    .navbar .dropmenu > * {
+        margin: 0.2rem;
+    }
+</style>

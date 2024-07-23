@@ -1,0 +1,112 @@
+:root {
+    --background: #161616;
+    --background-but: #2e2e2e;
+    --background-alt: #2f2f2f;
+    --background-opp: var(--foreground-alt);
+    --background-opp-alt: var(--foreground);
+
+    --foreground: #f0f0f0;
+    --foreground-alt: #d0d0d0;
+    --foreground-opp: var(--background-alt);
+    --foreground-opp-alt: var(--background);
+
+    --black: black;
+    --white: white;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body,
+main {
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    color: #333;
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    margin: 0px;
+}
+
+/* Drag and drop area styling */
+.dropArea {
+    border: solid 1px #80808050;
+}
+
+/* Button styling */
+button {
+    background-color: var(--background-but);
+    color: var(--foreground);
+    border: solid 1px transparent;
+    margin: 0px;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    transition: 150ms;
+}
+button:hover {
+    box-shadow: 0px 0px 8rem 0px rgba(150, 150, 150, 0.25) inset;
+}
+button:active {
+    border: solid 1px var(--foreground-alt);
+}
+
+/* Input styling */
+input {
+    background-color: var(--background-but);
+    color: var(--foreground);
+    border: solid 1px var(--foreground-alt);
+    margin: 0px;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+}
+
+/* Dropdown styling */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+.dropdown > .dropmenu {
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.25rem;
+    position: absolute;
+    width: max-content;
+    background-color: var(--background-alt);
+    border-radius: 0.2rem;
+    box-shadow: 0px 0px 0.5rem 0px rgba(0, 0, 0, 0.7);
+
+    transition: opacity 150ms;
+    opacity: 0;
+    z-index: -999;
+}
+
+.dropdown > .dropmenu.right {
+    right: 0px;
+}
+.dropdown > .dropmenu.left {
+    left: 0px;
+}
+
+.dropdown:focus-within > .dropmenu {
+    opacity: 1;
+    z-index: 1;
+}

@@ -1,0 +1,20 @@
+{
+  "name": "gui-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "rsbuild dev",
+    "build": "rsbuild build",
+    "preview": "rsbuild preview"
+  },
+  "dependencies": {
+    "svelte": "^4.2.10",
+    "svelte-dnd-action": "^0.9.49",
+    "svelte-headlessui": "^0.0.42"
+  },
+  "devDependencies": {
+    "@rsbuild/core": "1.0.1-beta.4",
+    "@rsbuild/plugin-svelte": "1.0.1-beta.4",
+    "typescript": "^5.5.2"
+  }
+}
