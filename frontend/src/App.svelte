@@ -12,15 +12,23 @@
             <h1>RLBot</h1>
         </div>
         <div class="navbuttons">
-            <button>Events</button>
-            <button>State Setting Sandbox</button>
-            <button>Story Mode</button>
+            <button on:click={alert.bind(null, "TODO: not implemented yet")}
+                >Events</button
+            >
+            <button on:click={alert.bind(null, "TODO: not implemented yet")}
+                >State Setting Sandbox</button
+            >
+            <button on:click={alert.bind(null, "TODO: not implemented yet")}
+                >Story Mode</button
+            >
             <div class="spacer"></div>
             <div class="dropdown">
                 <button>Menu</button>
                 <div class="dropmenu right">
-                    <button>Repair botpack</button>
-                    <button>Sample button</button>
+                    <button
+                        on:click={alert.bind(null, "TODO: not implemented yet")}
+                        >Repair botpack</button
+                    >
                 </div>
             </div>
         </div>
@@ -53,7 +61,8 @@
     }
     .logo {
         height: 3rem;
-        margin-right: 1rem;
+        margin-right: 0.2rem;
+        padding: 0.2rem;
     }
     .navbuttons > * {
         margin: 0px 0.25rem;

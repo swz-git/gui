@@ -51,6 +51,7 @@
         padding: 0px 0.6rem;
         text-transform: uppercase;
         display: flex;
+        color: white;
     }
     header.blue {
         background-color: #0054a6;
@@ -59,6 +60,6 @@
         background-color: #f26522;
     }
     .dimmed {
-        color: var(--foreground-alt);
+        color: #ffffffcc;
     }
 </style>

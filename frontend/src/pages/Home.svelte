@@ -8,8 +8,11 @@
     import MatchSettings from "../components/MatchSettings.svelte";
 
     let count = 0;
-    const backgroundImage =
-        arenaImages[Math.floor(Math.random() * arenaImages.length)];
+    // const backgroundImage =
+    //     arenaImages[Math.floor(Math.random() * arenaImages.length)];
+    const backgroundImage = arenaImages.find((x) =>
+        x.includes("Mannfield_Stormy"),
+    );
 
     interface DraggableBotInfo extends main.BotInfo {
         id: number;
