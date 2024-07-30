@@ -12,6 +12,9 @@
         "Gridiron",
     ];
     export let mode = "Soccer";
+
+    export let onStart = () => {};
+    export let onStop = () => {};
 </script>
 
 <div class="matchSettings">
@@ -31,8 +34,8 @@
         >
     </div>
     <div class="controls">
-        <button class="start">Start</button>
-        <button class="stop" disabled>Stop</button>
+        <button class="start" on:click={onStart()}>Start</button>
+        <button class="stop" on:click={onStop()}>Stop</button>
     </div>
 </div>
 

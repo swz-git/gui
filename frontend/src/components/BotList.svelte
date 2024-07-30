@@ -1,11 +1,12 @@
-<script>
+<script lang="ts">
     import { flip } from "svelte/animate";
     import {
         dndzone,
         TRIGGERS,
         SHADOW_ITEM_MARKER_PROPERTY_NAME,
     } from "svelte-dnd-action";
-    export let items;
+    import type { DraggableBotInfo } from "../index.ts";
+    export let items: DraggableBotInfo[];
     const flipDurationMs = 100;
     let shouldIgnoreDndEvents = false;
     function handleDndConsider(e) {
@@ -52,8 +53,8 @@
 >
     {#each items as bot (bot.id)}
         <div class="bot" animate:flip={{ duration: flipDurationMs }}>
-            <img src={bot.iconPath} alt="icon" />
-            <p>{bot.name}</p>
+            <img src={bot.config?.settings?.logoFile} alt="icon" />
+            <p>{bot.config?.settings?.name}</p>
         </div>
     {/each}
 </div>

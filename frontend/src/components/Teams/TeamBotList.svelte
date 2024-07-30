@@ -1,12 +1,13 @@
-<script>
+<script lang="ts">
     import { dndzone } from "svelte-dnd-action";
     import { flip } from "svelte/animate";
     import closeIcon from "../../assets/close.svg";
+    import type { DraggableBotInfo } from "../..";
     const flipDurationMs = 100;
     function handleSort(e) {
         items = e.detail.items;
     }
-    export let items = [];
+    export let items: DraggableBotInfo[] = [];
     function remove(id) {
         items = items.filter((x) => x.id !== id);
     }
@@ -34,8 +35,8 @@
     >
         {#each items as bot (bot.id)}
             <div class="bot" animate:flip={{ duration: flipDurationMs }}>
-                <img src={bot.iconPath} alt="icon" />
-                <p>{bot.name}</p>
+                <img src={bot?.config?.settings.logoFile} alt="icon" />
+                <p>{bot?.config?.settings.name}</p>
                 <div style="flex: 1;"></div>
                 <button class="close" on:click={remove(bot.id)}>
                     <img src={closeIcon} alt="X" />

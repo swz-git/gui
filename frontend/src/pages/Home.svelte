@@ -1,11 +1,11 @@
 <script lang="ts">
     import { GetBots } from "../../wailsjs/go/main/App.js";
-    import type { main } from "../../wailsjs/go/models.js";
     import arenaImages from "../arena-images.js";
     import rlbotMono from "../assets/rlbot_mono.png";
     import BotList from "../components/BotList.svelte";
     import Teams from "../components/Teams/Main.svelte";
     import MatchSettings from "../components/MatchSettings.svelte";
+    import type { DraggableBotInfo } from "../index.js";
 
     let count = 0;
     // const backgroundImage =
@@ -14,13 +14,11 @@
         x.includes("Mannfield_Stormy"),
     );
 
-    interface DraggableBotInfo extends main.BotInfo {
-        id: number;
-    }
-
-    let paths = ["/path/to/bots", "/another/path/to/more/bots"];
+    let paths = [];
     let bots: DraggableBotInfo[] = [];
+    let loadingBots = false;
     async function updateBots() {
+        loadingBots = true;
         const result = await GetBots(paths);
         bots = result.map((x) => {
             const n: DraggableBotInfo = {
@@ -29,6 +27,8 @@
             };
             return n;
         });
+        loadingBots = false;
+        console.log("Loaded bots:", result);
     }
     $: {
         paths;
@@ -57,6 +57,9 @@
             <div style="flex:1"></div>
             <input type="text" class="botSearch" placeholder="Search..." />
         </header>
+        {#if loadingBots}
+            <h3>loading...</h3>
+        {/if}
         <BotList items={bots} />
     </div>
 
