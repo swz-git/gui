@@ -3,3 +3,5 @@
 import {main} from '../models';
 
 export function GetBots(arg1:Array<string>):Promise<Array<main.BotInfo>>;
+
+export function PickFolder():Promise<string>;

@@ -5,3 +5,7 @@
 export function GetBots(arg1) {
   return window['go']['main']['App']['GetBots'](arg1);
 }
+
+export function PickFolder() {
+  return window['go']['main']['App']['PickFolder']();
+}

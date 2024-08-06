@@ -1,7 +1,8 @@
 <script lang="ts">
-    import { GetBots } from "../../wailsjs/go/main/App.js";
+    import { GetBots, PickFolder } from "../../wailsjs/go/main/App.js";
     import arenaImages from "../arena-images.js";
     import rlbotMono from "../assets/rlbot_mono.png";
+    import closeIcon from "../assets/close.svg";
     import BotList from "../components/BotList.svelte";
     import Teams from "../components/Teams/Main.svelte";
     import MatchSettings from "../components/MatchSettings.svelte";
@@ -14,12 +15,20 @@
         x.includes("Mannfield_Stormy"),
     );
 
-    let paths = [];
+    let paths = JSON.parse(
+        window.localStorage.getItem("BOT_SEARCH_PATHS") || "[]",
+    );
     let bots: DraggableBotInfo[] = [];
     let loadingBots = false;
+    let latestBotUpdateTime = null;
     async function updateBots() {
         loadingBots = true;
+        let internalStartTime = new Date();
+        latestBotUpdateTime = internalStartTime;
         const result = await GetBots(paths);
+        if (latestBotUpdateTime !== internalStartTime) {
+            return; // if newer "search" already started, dont write old data
+        }
         bots = result.map((x) => {
             const n: DraggableBotInfo = {
                 ...x,
@@ -30,12 +39,12 @@
         loadingBots = false;
         console.log("Loaded bots:", result);
     }
+    // this closure will get called if paths updates
     $: {
         paths;
+        window.localStorage.setItem("BOT_SEARCH_PATHS", JSON.stringify(paths));
         updateBots();
     }
-
-    console.log(bots);
 
     function handleClick() {
         count += 1;
@@ -50,16 +59,37 @@
                 <button>Add/Remove</button>
                 <div class="dropmenu">
                     {#each paths as path, i}
-                        <p>{path}</p>
+                        <div class="path">
+                            <pre>{path}</pre>
+                            <button
+                                class="close"
+                                on:click={() => {
+                                    paths.splice(i, 1);
+                                    // makes reactivity work
+                                    paths = paths;
+                                }}
+                            >
+                                <img src={closeIcon} alt="X" />
+                            </button>
+                        </div>
                     {/each}
+                    <button
+                        on:click={async () => {
+                            let result = await PickFolder();
+                            console.log("PickFolder returned:", result);
+                            if (result != "") {
+                                paths = [...paths, result];
+                            }
+                        }}>Add folder</button
+                    >
                 </div>
             </div>
+            {#if loadingBots}
+                <h3>Searching...</h3>
+            {/if}
             <div style="flex:1"></div>
             <input type="text" class="botSearch" placeholder="Search..." />
         </header>
-        {#if loadingBots}
-            <h3>loading...</h3>
-        {/if}
         <BotList items={bots} />
     </div>
 
@@ -100,5 +130,21 @@
         align-items: center;
         gap: 1rem;
         margin-bottom: 0.6rem;
+    }
+    .path {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        justify-content: space-between;
+    }
+    .path pre {
+        font-size: 1rem;
+        margin: 0px;
+    }
+    .path button {
+        padding: 0px;
+    }
+    .path button img {
+        filter: invert();
     }
 </style>

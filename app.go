@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/BurntSushi/toml"
+	"github.com/ncruces/zenity"
 	"github.com/wailsapp/mimetype"
 )
 
@@ -43,6 +44,14 @@ func recursiveFileSearch(root, targetName string) ([]string, error) {
 		return nil
 	})
 	return matches, err
+}
+
+func (a *App) PickFolder() string {
+	path, err := zenity.SelectFile(zenity.Directory())
+	if err != nil {
+		println("ERR: File picker failed")
+	}
+	return path
 }
 
 type BotInfo struct {
