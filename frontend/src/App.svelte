@@ -1,9 +1,12 @@
 <script lang="ts">
     import Home from "./pages/Home.svelte";
     import logo from "./assets/rlbot.png";
+    import { Toaster } from "svelte-french-toast";
 
     const activePage = "home";
 </script>
+
+<Toaster />
 
 <main>
     <div class="navbar">

@@ -2,9 +2,9 @@
     import TeamBotList from "./TeamBotList.svelte";
 
     // biome-ignore lint/style/useConst: its bound
-    export let blue_bots = [];
+    export let blueBots = [];
     // biome-ignore lint/style/useConst: its bound
-    export let orange_bots = [];
+    export let orangeBots = [];
 </script>
 
 <div class="teams">
@@ -12,17 +12,17 @@
         <header class="blue">
             <h3>Blue team</h3>
             <div style="flex: 1;"></div>
-            <h3 class="dimmed">{blue_bots?.length || 0} bots</h3>
+            <h3 class="dimmed">{blueBots?.length || 0} bots</h3>
         </header>
-        <TeamBotList bind:items={blue_bots} />
+        <TeamBotList bind:items={blueBots} />
     </div>
     <div class="team box">
         <header class="orange">
             <h3>Orange team</h3>
             <div style="flex: 1;"></div>
-            <h3 class="dimmed">{orange_bots?.length || 0} bots</h3>
+            <h3 class="dimmed">{orangeBots?.length || 0} bots</h3>
         </header>
-        <TeamBotList bind:items={orange_bots} />
+        <TeamBotList bind:items={orangeBots} />
     </div>
 </div>
 

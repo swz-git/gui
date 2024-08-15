@@ -1,12 +1,13 @@
 module gui
 
-go 1.21
+go 1.22.4
 
 toolchain go1.22.5
 
 require (
 	github.com/BurntSushi/toml v1.4.0
 	github.com/ncruces/zenity v0.10.13
+	github.com/swz-git/go-interface v0.0.0-20240811192551-f1645f1da2e3
 	github.com/wailsapp/mimetype v1.4.1
 	github.com/wailsapp/wails/v2 v2.9.1
 )
@@ -17,6 +18,7 @@ require (
 	github.com/dchest/jsmin v0.0.0-20220218165748-59f39799265f // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
+	github.com/google/flatbuffers v24.3.25+incompatible // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/jchv/go-winloader v0.0.0-20210711035445-715c2860da7e // indirect
 	github.com/josephspurrier/goversioninfo v1.4.0 // indirect

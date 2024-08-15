@@ -5,3 +5,7 @@ import {main} from '../models';
 export function GetBots(arg1:Array<string>):Promise<Array<main.BotInfo>>;
 
 export function PickFolder():Promise<string>;
+
+export function StartMatch(arg1:main.StartMatchOptions):Promise<main.Result>;
+
+export function StopMatch(arg1:boolean):Promise<main.Result>;

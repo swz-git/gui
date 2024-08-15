@@ -9,3 +9,11 @@ export function GetBots(arg1) {
 export function PickFolder() {
   return window['go']['main']['App']['PickFolder']();
 }
+
+export function StartMatch(arg1) {
+  return window['go']['main']['App']['StartMatch'](arg1);
+}
+
+export function StopMatch(arg1) {
+  return window['go']['main']['App']['StopMatch'](arg1);
+}

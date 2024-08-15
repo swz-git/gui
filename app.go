@@ -5,9 +5,12 @@ import (
 	"encoding/base64"
 	"os"
 	"path/filepath"
+	"runtime"
 
 	"github.com/BurntSushi/toml"
 	"github.com/ncruces/zenity"
+	rlbot "github.com/swz-git/go-interface"
+	"github.com/swz-git/go-interface/flat"
 	"github.com/wailsapp/mimetype"
 )
 
@@ -46,6 +49,110 @@ func recursiveFileSearch(root, targetName string) ([]string, error) {
 	return matches, err
 }
 
+type StartMatchOptions struct {
+	Map        string    `json:"map"`
+	GameMode   string    `json:"gameMode"`
+	BlueBots   []BotInfo `json:"blueBots"`
+	OrangeBots []BotInfo `json:"orangeBots"`
+}
+
+func BotInfoToPlayerConfig(botInfo BotInfo, team uint32) *flat.PlayerConfigurationT {
+	var runCommand string
+	if runtime.GOOS == "windows" {
+		runCommand = botInfo.Config.Settings.RunCommand
+	} else if runtime.GOOS == "linux" {
+		runCommand = botInfo.Config.Settings.RunCommandLinux
+	}
+
+	return &flat.PlayerConfigurationT{
+		Variety: &flat.PlayerClassT{
+			Type:  flat.PlayerClassRLBot,
+			Value: &flat.RLBotT{},
+		},
+		Name:       botInfo.Config.Settings.Name,
+		Team:       team,
+		Location:   botInfo.Config.Settings.Location,
+		RunCommand: runCommand,
+		// TODO: read player loadout file from LooksConfig
+		Loadout:  &flat.PlayerLoadoutT{},
+		SpawnId:  0, // let core do this
+		Hivemind: botInfo.Config.Settings.Hivemind,
+	}
+}
+
+type Result struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+}
+
+func (a *App) StartMatch(options StartMatchOptions) Result {
+	// TODO: Save this in App struct
+	// TODO: Make dynamic, pull from env var?
+	conn, err := rlbot.Connect("127.0.0.1:23234")
+	if err != nil {
+		return Result{false, "Failed to connect to rlbot"}
+	}
+
+	var gameMode flat.GameMode
+	switch options.GameMode {
+	case "Soccer":
+		gameMode = flat.GameModeSoccer
+	case "Hoops":
+		gameMode = flat.GameModeHoops
+	case "Dropshot":
+		gameMode = flat.GameModeDropshot
+	case "Hockey":
+		gameMode = flat.GameModeHockey
+	case "Rumble":
+		gameMode = flat.GameModeRumble
+	case "Heatseeker":
+		gameMode = flat.GameModeHeatseeker
+	case "Gridiron":
+		gameMode = flat.GameModeGridiron
+	default:
+		println("No mode chosen, defaulting to soccer")
+		gameMode = flat.GameModeSoccer
+	}
+
+	var playerConfigs []*flat.PlayerConfigurationT
+
+	for _, botInfo := range options.BlueBots {
+		playerConfigs = append(playerConfigs, BotInfoToPlayerConfig(botInfo, 0))
+	}
+	for _, botInfo := range options.OrangeBots {
+		playerConfigs = append(playerConfigs, BotInfoToPlayerConfig(botInfo, 1))
+	}
+
+	conn.SendPacket(&flat.MatchSettingsT{
+		AutoStartBots:        true,
+		GameMapUpk:           options.Map,
+		PlayerConfigurations: playerConfigs,
+		GameMode:             gameMode,
+		MutatorSettings: &flat.MutatorSettingsT{
+			MatchLength: flat.MatchLengthUnlimited,
+		},
+		EnableRendering:    true,
+		EnableStateSetting: true,
+	})
+
+	return Result{true, ""}
+}
+
+func (a *App) StopMatch(shutdownServer bool) Result {
+	// TODO: Save this in App struct
+	// TODO: Make dynamic, pull from env var?
+	conn, err := rlbot.Connect("127.0.0.1:23234")
+	if err != nil {
+		return Result{false, "Failed to connect to rlbot"}
+	}
+
+	conn.SendPacket(&flat.StopCommandT{
+		ShutdownServer: shutdownServer,
+	})
+
+	return Result{true, ""}
+}
+
 func (a *App) PickFolder() string {
 	path, err := zenity.SelectFile(zenity.Directory())
 	if err != nil {
@@ -57,7 +164,6 @@ func (a *App) PickFolder() string {
 type BotInfo struct {
 	Config   BotConfig `json:"config"`
 	TomlPath string    `json:"tomlPath"`
-	// TODO: add more info
 }
 
 type BotConfig struct {
@@ -79,6 +185,8 @@ type BotSettings struct {
 	// The command RLBot will call to start your bot on Linux
 	// If not defined, RLBot may try to run your bot under wine
 	RunCommandLinux string `toml:"run_command_linux" json:"runCommandLinux"`
+	// If bot can handle multiple agents with one client
+	Hivemind bool `toml:"hivemind" json:"hivemind"`
 }
 
 type BotDetails struct {

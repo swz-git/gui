@@ -1,8 +1,15 @@
 <script lang="ts">
-    import { GetBots, PickFolder } from "../../wailsjs/go/main/App.js";
+    import {
+        GetBots,
+        PickFolder,
+        StartMatch,
+        StopMatch,
+    } from "../../wailsjs/go/main/App.js";
+    import toast from "svelte-french-toast";
     import arenaImages from "../arena-images.js";
     import rlbotMono from "../assets/rlbot_mono.png";
     import closeIcon from "../assets/close.svg";
+    import reloadIcon from "../assets/reload.svg";
     import BotList from "../components/BotList.svelte";
     import Teams from "../components/Teams/Main.svelte";
     import MatchSettings from "../components/MatchSettings.svelte";
@@ -23,10 +30,10 @@
     let latestBotUpdateTime = null;
     async function updateBots() {
         loadingBots = true;
-        let internalStartTime = new Date();
-        latestBotUpdateTime = internalStartTime;
+        let internalUpdateTime = new Date();
+        latestBotUpdateTime = internalUpdateTime;
         const result = await GetBots(paths);
-        if (latestBotUpdateTime !== internalStartTime) {
+        if (latestBotUpdateTime !== internalUpdateTime) {
             return; // if newer "search" already started, dont write old data
         }
         bots = result.map((x) => {
@@ -44,6 +51,57 @@
         paths;
         window.localStorage.setItem("BOT_SEARCH_PATHS", JSON.stringify(paths));
         updateBots();
+    }
+
+    let blueBots = [];
+    let orangeBots = [];
+
+    let map = "";
+    let mode = "";
+
+    async function onMatchStart() {
+        let options = {
+            map,
+            gameMode: mode,
+            blueBots,
+            orangeBots,
+        };
+        console.log("starting with options", options);
+        toast("Starting match...", {
+            position: "bottom-right",
+        });
+        let response = await StartMatch(options);
+
+        if (response.success) {
+            toast.success("Sent start match command", {
+                position: "bottom-right",
+                duration: 5000,
+            });
+        } else {
+            toast.error(`Match start failed\n${response.message}`, {
+                position: "bottom-right",
+                duration: 5000,
+            });
+        }
+    }
+
+    async function onMatchStop() {
+        toast("Stopping match...", {
+            position: "bottom-right",
+        });
+        let response = await StopMatch(false);
+
+        if (response.success) {
+            toast.success("Sent stop match command", {
+                position: "bottom-right",
+                duration: 5000,
+            });
+        } else {
+            toast.error(`Match stop failed\n${response.message}`, {
+                position: "bottom-right",
+                duration: 5000,
+            });
+        }
     }
 
     function handleClick() {
@@ -86,6 +144,10 @@
             </div>
             {#if loadingBots}
                 <h3>Searching...</h3>
+            {:else}
+                <button class="reloadButton" on:click={updateBots}
+                    ><img src={reloadIcon} alt="reload" /></button
+                >
             {/if}
             <div style="flex:1"></div>
             <input type="text" class="botSearch" placeholder="Search..." />
@@ -93,9 +155,16 @@
         <BotList items={bots} />
     </div>
 
-    <div><Teams /></div>
+    <div><Teams bind:blueBots bind:orangeBots /></div>
 
-    <div class="box"><MatchSettings /></div>
+    <div class="box">
+        <MatchSettings
+            onStart={onMatchStart}
+            onStop={onMatchStop}
+            bind:map
+            bind:mode
+        />
+    </div>
 </div>
 
 <style>
@@ -130,6 +199,12 @@
         align-items: center;
         gap: 1rem;
         margin-bottom: 0.6rem;
+    }
+    .reloadButton {
+        padding: 0px;
+    }
+    .reloadButton img {
+        filter: invert();
     }
     .path {
         display: flex;

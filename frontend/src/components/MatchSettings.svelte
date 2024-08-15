@@ -19,23 +19,30 @@
 
 <div class="matchSettings">
     <h1>Match Settings</h1>
-    <div class="settings">
-        <Select options={maps} bind:value={map} placeholder="Select map" />
-        <Select
-            options={Object.fromEntries(modes.map((x) => [x, x]))}
-            bind:value={mode}
-            placeholder="Select mode"
-        />
-        <button on:click={alert.bind(null, "TODO: not implemented yet")}
-            >Mutators</button
-        >
-        <button on:click={alert.bind(null, "TODO: not implemented yet")}
-            >Extra</button
-        >
-    </div>
-    <div class="controls">
-        <button class="start" on:click={onStart()}>Start</button>
-        <button class="stop" on:click={onStop()}>Stop</button>
+    <div class="content">
+        <div class="settings">
+            <Select
+                class="select"
+                options={maps}
+                bind:value={map}
+                placeholder="Select map"
+            />
+            <Select
+                options={Object.fromEntries(modes.map((x) => [x, x]))}
+                bind:value={mode}
+                placeholder="Select mode"
+            />
+            <button on:click={alert.bind(null, "TODO: not implemented yet")}
+                >Mutators</button
+            >
+            <button on:click={alert.bind(null, "TODO: not implemented yet")}
+                >Extra</button
+            >
+        </div>
+        <div class="controls">
+            <button class="start" on:click={onStart()}>Start</button>
+            <button class="stop" on:click={onStop()}>Stop</button>
+        </div>
     </div>
 </div>
 
@@ -43,8 +50,15 @@
     h1 {
         margin-bottom: 0.6rem;
     }
-    .settings {
+    .settings,
+    .controls {
         display: flex;
+        gap: 0.5rem;
+    }
+    .content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
     }
 
     button.start {
