@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	"github.com/BurntSushi/toml"
 	"github.com/ncruces/zenity"
@@ -41,7 +42,7 @@ func recursiveFileSearch(root, targetName string) ([]string, error) {
 		if err != nil {
 			return err
 		}
-		if info.Name() == targetName {
+		if strings.HasSuffix(info.Name(), targetName) {
 			matches = append(matches, path)
 		}
 		return nil
