@@ -130,11 +130,9 @@ func (a *App) StartMatch(options StartMatchOptions) Result {
 		GameMapUpk:           options.Map,
 		PlayerConfigurations: playerConfigs,
 		GameMode:             gameMode,
-		MutatorSettings: &flat.MutatorSettingsT{
-			MatchLength: flat.MatchLengthUnlimited,
-		},
-		EnableRendering:    true,
-		EnableStateSetting: true,
+		MutatorSettings:      &options.MutatorSettings,
+		EnableRendering:      true,
+		EnableStateSetting:   true,
 	})
 
 	return Result{true, ""}
