@@ -1,9 +1,7 @@
 <script>
     import TeamBotList from "./TeamBotList.svelte";
 
-    // biome-ignore lint/style/useConst: its bound
     export let blueBots = [];
-    // biome-ignore lint/style/useConst: its bound
     export let orangeBots = [];
 </script>
 

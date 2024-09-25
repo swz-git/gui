@@ -5,14 +5,18 @@
         StartMatch,
         StopMatch,
     } from "../../wailsjs/go/main/App.js";
+    import type * as go from "../../wailsjs/go/models";
     import toast from "svelte-french-toast";
-    import arenaImages from "../arena-images.js";
+    // @ts-ignore
+    import arenaImages from "../arena-images.ts";
     import rlbotMono from "../assets/rlbot_mono.png";
     import closeIcon from "../assets/close.svg";
     import reloadIcon from "../assets/reload.svg";
     import BotList from "../components/BotList.svelte";
+    // @ts-ignore
     import Teams from "../components/Teams/Main.svelte";
-    import MatchSettings from "../components/MatchSettings.svelte";
+    // @ts-ignore
+    import MatchSettings from "../components/MatchSettings/Main.svelte";
     import type { DraggableBotInfo } from "../index.js";
 
     let count = 0;
@@ -37,6 +41,7 @@
             return; // if newer "search" already started, dont write old data
         }
         bots = result.map((x) => {
+            // @ts-ignore
             const n: DraggableBotInfo = {
                 ...x,
                 id: Math.random(),
@@ -53,18 +58,21 @@
         updateBots();
     }
 
-    let blueBots = [];
-    let orangeBots = [];
+    let blueBots: any[] = [];
+    let orangeBots: any[] = [];
 
-    let map = "";
-    let mode = "";
+    let map: any;
+    let mode: any;
+    let mutatorSettings: any;
 
     async function onMatchStart() {
-        let options = {
+        // @ts-ignore
+        let options: go.main.StartMatchOptions = {
             map,
             gameMode: mode,
             blueBots,
             orangeBots,
+            mutatorSettings,
         };
         console.log("starting with options", options);
         toast("Starting match...", {
@@ -163,6 +171,7 @@
             onStop={onMatchStop}
             bind:map
             bind:mode
+            bind:mutators={mutatorSettings}
         />
     </div>
 </div>

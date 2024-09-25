@@ -49,13 +49,6 @@ func recursiveFileSearch(root, targetName string) ([]string, error) {
 	return matches, err
 }
 
-type StartMatchOptions struct {
-	Map        string    `json:"map"`
-	GameMode   string    `json:"gameMode"`
-	BlueBots   []BotInfo `json:"blueBots"`
-	OrangeBots []BotInfo `json:"orangeBots"`
-}
-
 func BotInfoToPlayerConfig(botInfo BotInfo, team uint32) *flat.PlayerConfigurationT {
 	var runCommand string
 	if runtime.GOOS == "windows" {
@@ -83,6 +76,14 @@ func BotInfoToPlayerConfig(botInfo BotInfo, team uint32) *flat.PlayerConfigurati
 type Result struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`
+}
+
+type StartMatchOptions struct {
+	Map             string                `json:"map"`
+	GameMode        string                `json:"gameMode"`
+	BlueBots        []BotInfo             `json:"blueBots"`
+	OrangeBots      []BotInfo             `json:"orangeBots"`
+	MutatorSettings flat.MutatorSettingsT `json:"mutatorSettings"`
 }
 
 func (a *App) StartMatch(options StartMatchOptions) Result {
