@@ -58,12 +58,22 @@ type Result struct {
 	Message string `json:"message"`
 }
 
+type ExtraOptions struct {
+	EnableRendering       bool `json:"enableRendering"`
+	EnableStateSetting    bool `json:"enableStateSetting"`
+	InstantStart          bool `json:"instantStart"`
+	SkipReplays           bool `json:"skipReplays"`
+	AutoSaveReplay        bool `json:"autoSaveReplay"`
+	ExistingMatchBehavior byte `json:"existingMatchBehavior"`
+}
+
 type StartMatchOptions struct {
 	Map             string                `json:"map"`
 	GameMode        string                `json:"gameMode"`
 	BluePlayers     []PlayerJs            `json:"bluePlayers"`
 	OrangePlayers   []PlayerJs            `json:"orangePlayers"`
 	MutatorSettings flat.MutatorSettingsT `json:"mutatorSettings"`
+	ExtraOptions    ExtraOptions          `json:"extraOptions"`
 }
 
 func (a *App) StartMatch(options StartMatchOptions) Result {
@@ -108,13 +118,17 @@ func (a *App) StartMatch(options StartMatchOptions) Result {
 	println(playerConfigs)
 
 	conn.SendPacket(&flat.MatchSettingsT{
-		AutoStartBots:        true,
-		GameMapUpk:           options.Map,
-		PlayerConfigurations: playerConfigs,
-		GameMode:             gameMode,
-		MutatorSettings:      &options.MutatorSettings,
-		EnableRendering:      true,
-		EnableStateSetting:   true,
+		AutoStartBots:         true,
+		GameMapUpk:            options.Map,
+		PlayerConfigurations:  playerConfigs,
+		GameMode:              gameMode,
+		MutatorSettings:       &options.MutatorSettings,
+		EnableRendering:       options.ExtraOptions.EnableRendering,
+		EnableStateSetting:    options.ExtraOptions.EnableStateSetting,
+		InstantStart:          options.ExtraOptions.InstantStart,
+		SkipReplays:           options.ExtraOptions.SkipReplays,
+		AutoSaveReplay:        options.ExtraOptions.AutoSaveReplay,
+		ExistingMatchBehavior: flat.ExistingMatchBehavior(options.ExtraOptions.ExistingMatchBehavior),
 	})
 
 	return Result{true, ""}

@@ -3,6 +3,7 @@
     import Modal from "../Modal.svelte";
     import maps from "../../arena-names.js";
     import { mutators as mutatorOptions } from "./rlmutators";
+    import type { ExtraOptions } from "../../../bindings/gui";
 
     export let map = localStorage.getItem("MS_MAP") || maps.DFHStadium;
     $: {
@@ -21,6 +22,20 @@
     export let mode = localStorage.getItem("MS_MODE") || "Soccer";
     $: {
         localStorage.setItem("MS_MODE", mode);
+    }
+
+    const existingMatchBehaviors: { [n: string]: number } = {
+        "Restart if different": 0,
+        Restart: 1,
+        "Continue and spawn": 2,
+    };
+
+    let showExtraOptions = false;
+    export let extraOptions: ExtraOptions = JSON.parse(
+        localStorage.getItem("MS_EXTRAOPTIONS") || "{}",
+    );
+    $: {
+        localStorage.setItem("MS_EXTRAOPTIONS", JSON.stringify(extraOptions));
     }
 
     let showMutators = false;
@@ -56,8 +71,10 @@
                     showMutators = true;
                 }}>Mutators</button
             >
-            <button on:click={alert.bind(null, "TODO: not implemented yet")}
-                >Extra</button
+            <button
+                on:click={() => {
+                    showExtraOptions = true;
+                }}>Extra</button
             >
         </div>
         <div class="controls">
@@ -88,7 +105,7 @@
             </div>
         {/each}
     </div>
-    <div class="mutatorButtons">
+    <div class="bottomButtons">
         <p>Settings are saved automatically</p>
         <button
             class="mutatorResetButton"
@@ -98,6 +115,63 @@
                 }
             }}>Reset</button
         >
+    </div>
+</Modal>
+
+<Modal title="RLBot Extra Options" bind:visible={showExtraOptions}>
+    <div class="extraoptions">
+        <input
+            type="checkbox"
+            id="enableRendering"
+            bind:checked={extraOptions.enableRendering}
+        />
+        <label for="enableRendering">
+            Enable Rendering (bots can draw on screen)
+        </label>
+        <br />
+        <input
+            type="checkbox"
+            id="enableStateSetting"
+            bind:checked={extraOptions.enableStateSetting}
+        />
+        <label for="enableStateSetting">
+            Enable State Setting (bots can teleport)
+        </label>
+        <br />
+        <input
+            type="checkbox"
+            id="autoSaveReplay"
+            bind:checked={extraOptions.autoSaveReplay}
+        />
+        <label for="autoSaveReplay"> Auto Save Replay </label>
+        <br />
+        <input
+            type="checkbox"
+            id="skipReplays"
+            bind:checked={extraOptions.skipReplays}
+        />
+        <label for="skipReplays"> Skip Replays </label>
+        <br />
+        <input
+            type="checkbox"
+            id="instantStart"
+            bind:checked={extraOptions.instantStart}
+        />
+        <label for="instantStart"> Instant Start </label>
+        <br />
+        <select
+            name="cock"
+            id="emb"
+            bind:value={extraOptions.existingMatchBehavior}
+        >
+            {#each Object.keys(existingMatchBehaviors) as key}
+                <option value={existingMatchBehaviors[key]}>{key}</option>
+            {/each}
+        </select>
+        <label for="emb"></label>
+    </div>
+    <div class="bottomButtons">
+        <p>Settings are saved automatically</p>
     </div>
 </Modal>
 
@@ -125,10 +199,11 @@
         display: flex;
         flex-direction: column;
     }
-    .mutatorButtons {
+    .bottomButtons {
         display: flex;
         margin-top: 1rem;
         justify-content: space-between;
+        align-items: end;
     }
     .mutatorResetButton {
         background-color: red;

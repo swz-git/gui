@@ -71,6 +71,7 @@
     let map: any;
     let mode: any;
     let mutatorSettings: any;
+    let extraOptions: any;
 
     async function onMatchStart() {
         let options: StartMatchOptions = {
@@ -85,6 +86,7 @@
                 return draggablePlayerToPlayerJs(x);
             }),
             mutatorSettings,
+            extraOptions,
         };
 
         toast("Starting match...", {
@@ -181,6 +183,7 @@
             bind:map
             bind:mode
             bind:mutators={mutatorSettings}
+            bind:extraOptions
         />
     </div>
 </div>
