@@ -20,6 +20,7 @@
     // @ts-ignore
     import MatchSettings from "../components/MatchSettings/Main.svelte";
     import { type DraggablePlayer, draggablePlayerToPlayerJs } from "../index";
+    import { BASE_PLAYERS } from "../base-players";
 
     const backgroundImage =
         arenaImages[Math.floor(Math.random() * arenaImages.length)];
@@ -30,47 +31,6 @@
     let paths = JSON.parse(
         window.localStorage.getItem("BOT_SEARCH_PATHS") || "[]",
     );
-
-    const BASE_PLAYERS: DraggablePlayer[] = [
-        {
-            displayName: "Human",
-            icon: "None",
-            id: Math.random(),
-            player: new HumanInfo(),
-        },
-        {
-            displayName: "Psyonix Beginner",
-            icon: "None",
-            id: Math.random(),
-            player: new PsyonixBotInfo({
-                skill: 0,
-            }),
-        },
-        {
-            displayName: "Psyonix Rookie",
-            icon: "None",
-            id: Math.random(),
-            player: new PsyonixBotInfo({
-                skill: 1,
-            }),
-        },
-        {
-            displayName: "Psyonix Pro",
-            icon: "None",
-            id: Math.random(),
-            player: new PsyonixBotInfo({
-                skill: 2,
-            }),
-        },
-        {
-            displayName: "Psyonix Allstar",
-            icon: "None",
-            id: Math.random(),
-            player: new PsyonixBotInfo({
-                skill: 3,
-            }),
-        },
-    ];
 
     let players: DraggablePlayer[] = [...BASE_PLAYERS];
 

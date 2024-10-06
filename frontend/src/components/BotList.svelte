@@ -5,6 +5,7 @@
         TRIGGERS,
         SHADOW_ITEM_MARKER_PROPERTY_NAME,
     } from "svelte-dnd-action";
+    import defaultIcon from "../assets/rlbot_mono.png";
     import type { DraggablePlayer } from "../index";
     export let items: DraggablePlayer[] = [];
     const flipDurationMs = 100;
@@ -53,7 +54,7 @@
 >
     {#each items as bot (bot.id)}
         <div class="bot" animate:flip={{ duration: flipDurationMs }}>
-            <img src={bot.icon} alt="icon" />
+            <img src={bot.icon || defaultIcon} alt="icon" />
             <p>{bot.displayName}</p>
         </div>
     {/each}

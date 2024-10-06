@@ -2,6 +2,7 @@
     import { dndzone } from "svelte-dnd-action";
     import { flip } from "svelte/animate";
     import closeIcon from "../../assets/close.svg";
+    import defaultIcon from "../../assets/rlbot_mono.png";
     import type DraggablePlayer from "../..";
     const flipDurationMs = 100;
     function handleSort(e: any) {
@@ -35,7 +36,7 @@
     >
         {#each items as bot (bot.id)}
             <div class="bot" animate:flip={{ duration: flipDurationMs }}>
-                <img src={bot?.icon} alt="icon" />
+                <img src={bot?.icon || defaultIcon} alt="icon" />
                 <p>{bot?.displayName}</p>
                 <div style="flex: 1;"></div>
                 <button class="close" on:click={remove(bot.id)}>
