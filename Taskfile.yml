@@ -28,7 +28,7 @@ tasks:
         vars:
           BUILD_FLAGS: "{{.BUILD_FLAGS}}"
       - task: generate:icons
-      - task: generate:syso
+        # - task: generate:syso
         vars:
           ARCH: "{{.ARCH}}"
     cmds:
