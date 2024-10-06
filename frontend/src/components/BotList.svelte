@@ -9,14 +9,14 @@
     export let items: DraggableBotInfo[];
     const flipDurationMs = 100;
     let shouldIgnoreDndEvents = false;
-    function handleDndConsider(e) {
+    function handleDndConsider(e: any) {
         const { trigger, id } = e.detail.info;
         if (trigger === TRIGGERS.DRAG_STARTED) {
             const idx = items.findIndex((item) => item.id === id);
             const newId = `${id}_copy_${Math.round(Math.random() * 100000)}`;
             // the line below was added in order to be compatible with version svelte-dnd-action 0.7.4 and above
             e.detail.items = e.detail.items.filter(
-                (item) => !item[SHADOW_ITEM_MARKER_PROPERTY_NAME],
+                (item: any) => !item[SHADOW_ITEM_MARKER_PROPERTY_NAME],
             );
             e.detail.items.splice(idx, 0, { ...items[idx], id: newId });
             items = e.detail.items;
@@ -29,7 +29,7 @@
             items = [...items];
         }
     }
-    function handleDndFinalize(e) {
+    function handleDndFinalize(e: any) {
         if (!shouldIgnoreDndEvents) {
             items = e.detail.items;
         } else {
