@@ -27,6 +27,10 @@ func main() {
 		OnStartup:        app.startup,
 		Bind: []interface{}{
 			app,
+			&HumanInfo{},
+			&PsyonixBotInfo{},
+			&BotInfo{},
+			*Player,
 		},
 	})
 

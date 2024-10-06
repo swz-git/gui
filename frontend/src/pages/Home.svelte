@@ -19,12 +19,11 @@
     import MatchSettings from "../components/MatchSettings/Main.svelte";
     import type { DraggableBotInfo } from "../index.js";
 
-    let count = 0;
-    // const backgroundImage =
-    //     arenaImages[Math.floor(Math.random() * arenaImages.length)];
-    const backgroundImage = arenaImages.find((x) =>
-        x.includes("Mannfield_Stormy"),
-    );
+    const backgroundImage =
+        arenaImages[Math.floor(Math.random() * arenaImages.length)];
+    // const backgroundImage = arenaImages.find((x) =>
+    //     x.includes("Mannfield_Stormy"),
+    // );
 
     let paths = JSON.parse(
         window.localStorage.getItem("BOT_SEARCH_PATHS") || "[]",
@@ -78,6 +77,7 @@
         toast("Starting match...", {
             position: "bottom-right",
         });
+        console.log(options);
         let response = await StartMatch(options);
 
         if (response.success) {
@@ -110,10 +110,6 @@
                 duration: 5000,
             });
         }
-    }
-
-    function handleClick() {
-        count += 1;
     }
 </script>
 
