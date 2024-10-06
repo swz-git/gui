@@ -8,4 +8,9 @@ export default defineConfig({
     // files are present in the dist folder
     writeToDisk: true,
   },
+  output: {
+    sourceMap: {
+      js: "inline-source-map",
+    },
+  },
 });

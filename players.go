@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/base64"
+	"encoding/json"
+	"log"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -10,6 +12,36 @@ import (
 	"github.com/swz-git/go-interface/flat"
 	"github.com/wailsapp/mimetype"
 )
+
+type PlayerJs struct {
+	Sort   string          `json:"sort"`
+	Player json.RawMessage `json:"player"`
+}
+
+func (self PlayerJs) ToPlayer() Player {
+	switch self.Sort {
+	case "rlbot":
+		var correct BotInfo
+		if err := json.Unmarshal([]byte(self.Player), &correct); err != nil {
+			log.Fatal("unable to unmarshal PlayerJs")
+		}
+		return correct
+	case "psyonix":
+		var correct PsyonixBotInfo
+		if err := json.Unmarshal([]byte(self.Player), &correct); err != nil {
+			log.Fatal("unable to unmarshal PlayerJs")
+		}
+		return correct
+	case "human":
+		var correct HumanInfo
+		if err := json.Unmarshal([]byte(self.Player), &correct); err != nil {
+			log.Fatal("unable to unmarshal PlayerJs")
+		}
+		return correct
+	}
+	log.Println("ERROR: invalid sort field in PlayerJs")
+	return PsyonixBotInfo{}
+}
 
 type Player interface {
 	ToPlayerConfig(team uint32) *flat.PlayerConfigurationT
@@ -44,7 +76,7 @@ func (info HumanInfo) ToPlayerConfig(team uint32) *flat.PlayerConfigurationT {
 	return &flat.PlayerConfigurationT{
 		Variety: &flat.PlayerClassT{
 			Type:  flat.PlayerClassHuman,
-			Value: &flat.Human{},
+			Value: &flat.HumanT{},
 		},
 		Name:       "Human",
 		Team:       team,

@@ -1,6 +1,12 @@
 <script lang="ts">
     // @ts-ignore
-    import { App, type StartMatchOptions } from "../../bindings/gui/index.js";
+    import {
+        App,
+        BotInfo,
+        HumanInfo,
+        PsyonixBotInfo,
+        type StartMatchOptions,
+    } from "../../bindings/gui/index.js";
     /** @import * from '../../bindings/gui' */
     import toast from "svelte-french-toast";
     // @ts-ignore
@@ -13,7 +19,7 @@
     import Teams from "../components/Teams/Main.svelte";
     // @ts-ignore
     import MatchSettings from "../components/MatchSettings/Main.svelte";
-    import type { DraggableBotInfo } from "../index.js";
+    import { type DraggablePlayer, draggablePlayerToPlayerJs } from "../index";
 
     const backgroundImage =
         arenaImages[Math.floor(Math.random() * arenaImages.length)];
@@ -24,26 +30,72 @@
     let paths = JSON.parse(
         window.localStorage.getItem("BOT_SEARCH_PATHS") || "[]",
     );
-    let bots: DraggableBotInfo[] = [];
-    let loadingBots = false;
+
+    const BASE_PLAYERS: DraggablePlayer[] = [
+        {
+            displayName: "Human",
+            icon: "None",
+            id: Math.random(),
+            player: new HumanInfo(),
+        },
+        {
+            displayName: "Psyonix Beginner",
+            icon: "None",
+            id: Math.random(),
+            player: new PsyonixBotInfo({
+                skill: 0,
+            }),
+        },
+        {
+            displayName: "Psyonix Rookie",
+            icon: "None",
+            id: Math.random(),
+            player: new PsyonixBotInfo({
+                skill: 1,
+            }),
+        },
+        {
+            displayName: "Psyonix Pro",
+            icon: "None",
+            id: Math.random(),
+            player: new PsyonixBotInfo({
+                skill: 2,
+            }),
+        },
+        {
+            displayName: "Psyonix Allstar",
+            icon: "None",
+            id: Math.random(),
+            player: new PsyonixBotInfo({
+                skill: 3,
+            }),
+        },
+    ];
+
+    let players: DraggablePlayer[] = [...BASE_PLAYERS];
+
+    let loadingPlayers = false;
     let latestBotUpdateTime = null;
     async function updateBots() {
-        loadingBots = true;
+        loadingPlayers = true;
         let internalUpdateTime = new Date();
         latestBotUpdateTime = internalUpdateTime;
         const result = await App.GetBots(paths);
         if (latestBotUpdateTime !== internalUpdateTime) {
             return; // if newer "search" already started, dont write old data
         }
-        bots = result.map((x) => {
+        players = result.map((x: BotInfo) => {
             // @ts-ignore
-            const n: DraggableBotInfo = {
-                ...x,
+            const n: typeof DraggablePlayer = {
+                displayName: x.config.settings.name,
+                icon: x.config.settings.logoFile,
+                player: new BotInfo(x),
                 id: Math.random(),
             };
             return n;
         });
-        loadingBots = false;
+        players = [...BASE_PLAYERS, ...players];
+        loadingPlayers = false;
         console.log("Loaded bots:", result);
     }
     // this closure will get called if paths updates
@@ -53,8 +105,8 @@
         updateBots();
     }
 
-    let blueBots: any[] = [];
-    let orangeBots: any[] = [];
+    let bluePlayers: DraggablePlayer[] = [];
+    let orangePlayers: DraggablePlayer[] = [];
 
     let map: any;
     let mode: any;
@@ -64,8 +116,14 @@
         let options: StartMatchOptions = {
             map,
             gameMode: mode,
-            bluePlayers: blueBots,
-            orangePlayers: orangeBots,
+            bluePlayers: bluePlayers.map((x: DraggablePlayer) => {
+                // @ts-ignore
+                return draggablePlayerToPlayerJs(x);
+            }),
+            orangePlayers: orangePlayers.map((x: DraggablePlayer) => {
+                // @ts-ignore
+                return draggablePlayerToPlayerJs(x);
+            }),
             mutatorSettings,
         };
 
@@ -141,7 +199,7 @@
                     >
                 </div>
             </div>
-            {#if loadingBots}
+            {#if loadingPlayers}
                 <h3>Searching...</h3>
             {:else}
                 <button class="reloadButton" on:click={updateBots}
@@ -151,10 +209,10 @@
             <div style="flex:1"></div>
             <input type="text" class="botSearch" placeholder="Search..." />
         </header>
-        <BotList items={bots} />
+        <BotList items={players} />
     </div>
 
-    <div><Teams bind:blueBots bind:orangeBots /></div>
+    <div><Teams bind:bluePlayers bind:orangePlayers /></div>
 
     <div class="box">
         <MatchSettings

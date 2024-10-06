@@ -1,8 +1,8 @@
 <script lang="ts">
     import TeamBotList from "./TeamBotList.svelte";
 
-    export let blueBots: any[] = [];
-    export let orangeBots: any[] = [];
+    export let bluePlayers: any[] = [];
+    export let orangePlayers: any[] = [];
 </script>
 
 <div class="teams">
@@ -10,17 +10,17 @@
         <header class="blue">
             <h3>Blue team</h3>
             <div style="flex: 1;"></div>
-            <h3 class="dimmed">{blueBots?.length || 0} bots</h3>
+            <h3 class="dimmed">{bluePlayers?.length || 0} bots</h3>
         </header>
-        <TeamBotList bind:items={blueBots} />
+        <TeamBotList bind:items={bluePlayers} />
     </div>
     <div class="team box">
         <header class="orange">
             <h3>Orange team</h3>
             <div style="flex: 1;"></div>
-            <h3 class="dimmed">{orangeBots?.length || 0} bots</h3>
+            <h3 class="dimmed">{orangePlayers?.length || 0} bots</h3>
         </header>
-        <TeamBotList bind:items={orangeBots} />
+        <TeamBotList bind:items={orangePlayers} />
     </div>
 </div>
 

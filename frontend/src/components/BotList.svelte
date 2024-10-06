@@ -5,8 +5,8 @@
         TRIGGERS,
         SHADOW_ITEM_MARKER_PROPERTY_NAME,
     } from "svelte-dnd-action";
-    import type { DraggableBotInfo } from "../index.ts";
-    export let items: DraggableBotInfo[];
+    import type { DraggablePlayer } from "../index";
+    export let items: DraggablePlayer[] = [];
     const flipDurationMs = 100;
     let shouldIgnoreDndEvents = false;
     function handleDndConsider(e: any) {
@@ -53,8 +53,8 @@
 >
     {#each items as bot (bot.id)}
         <div class="bot" animate:flip={{ duration: flipDurationMs }}>
-            <img src={bot.config?.settings?.logoFile} alt="icon" />
-            <p>{bot.config?.settings?.name}</p>
+            <img src={bot.icon} alt="icon" />
+            <p>{bot.displayName}</p>
         </div>
     {/each}
 </div>

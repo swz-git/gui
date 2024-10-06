@@ -6,7 +6,6 @@
 
     export let map = localStorage.getItem("MS_MAP") || maps.DFHStadium;
     $: {
-        console.log(map);
         localStorage.setItem("MS_MAP", map);
     }
 

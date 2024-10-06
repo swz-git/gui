@@ -1,6 +1,6 @@
 # rlbot gui
 
-A GUI for [RLBot](https://rlbot.org) v5 written in go and powered by [wails](https://wails.io) (v3 beta).
+A GUI for [RLBot](https://rlbot.org) v5 written in go and powered by [wails](https://wails.io) (v3 alpha).
 
 ## Building
 
@@ -13,7 +13,7 @@ A GUI for [RLBot](https://rlbot.org) v5 written in go and powered by [wails](htt
 2. Run `wails3 dev`
 
 ## Installing build dependencies
-1. Install the [wails cli](https://v3alpha.wails.io/getting-started/installation/)
+1. Install the [wails v3-alpha cli](https://v3alpha.wails.io/getting-started/installation/)
 2. Install [node](https://nodejs.org/en) and [pnpm](https://pnpm.io/installation)
 3. Run `cd frontend` and then `pnpm i` (you probably want to `cd ../` after)
 

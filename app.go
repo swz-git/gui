@@ -16,6 +16,13 @@ type App struct {
 	ctx context.Context
 }
 
+func (a *App) IgnoreMe(
+	_ BotInfo,
+	_ PsyonixBotInfo,
+	_ HumanInfo,
+) {
+}
+
 // NewApp creates a new App application struct
 func NewApp() *App {
 	return &App{}
@@ -54,8 +61,8 @@ type Result struct {
 type StartMatchOptions struct {
 	Map             string                `json:"map"`
 	GameMode        string                `json:"gameMode"`
-	BluePlayers     []Player              `json:"bluePlayers"`
-	OrangePlayers   []Player              `json:"orangePlayers"`
+	BluePlayers     []PlayerJs            `json:"bluePlayers"`
+	OrangePlayers   []PlayerJs            `json:"orangePlayers"`
 	MutatorSettings flat.MutatorSettingsT `json:"mutatorSettings"`
 }
 
@@ -91,11 +98,11 @@ func (a *App) StartMatch(options StartMatchOptions) Result {
 	var playerConfigs []*flat.PlayerConfigurationT
 
 	for _, playerInfo := range options.BluePlayers {
-		println(playerInfo.ToPlayerConfig(0))
-		playerConfigs = append(playerConfigs, playerInfo.ToPlayerConfig(0))
+		println(playerInfo.ToPlayer().ToPlayerConfig(0))
+		playerConfigs = append(playerConfigs, playerInfo.ToPlayer().ToPlayerConfig(0))
 	}
 	for _, playerInfo := range options.OrangePlayers {
-		playerConfigs = append(playerConfigs, playerInfo.ToPlayerConfig(1))
+		playerConfigs = append(playerConfigs, playerInfo.ToPlayer().ToPlayerConfig(1))
 	}
 
 	println(playerConfigs)
