@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
     import TeamBotList from "./TeamBotList.svelte";
 
-    export let blueBots = [];
-    export let orangeBots = [];
+    export let blueBots: any[] = [];
+    export let orangeBots: any[] = [];
 </script>
 
 <div class="teams">
@@ -37,10 +37,10 @@
     .teams > .team {
         flex: 1;
         padding: 0px 0;
-        /* Nice transparent blur, not supported yet though. Therefor commented */
-        /* background-color: rgba(0, 0, 0, 0.5);
+        /* Nice transparent blur */
+        background-color: rgba(0, 0, 0, 0.5);
         -webkit-backdrop-filter: blur(10px);
-        backdrop-filter: blur(10px); */
+        backdrop-filter: blur(10px);
         display: flex;
         flex-direction: column;
     }

@@ -1,6 +1,6 @@
 import "./global.css";
 import App from "./App.svelte";
-import type { main } from "../wailsjs/go/models.js";
+import type { BotInfo } from "../bindings/gui";
 
 const app = new App({
   target: document.body,
@@ -9,7 +9,7 @@ const app = new App({
   // },
 });
 
-export interface DraggableBotInfo extends main.BotInfo {
+export interface DraggableBotInfo extends BotInfo {
   id: number;
 }
 

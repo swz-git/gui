@@ -1,0 +1,223 @@
+version: "3"
+
+vars:
+  APP_NAME: "rlbotgui"
+  BIN_DIR: "bin"
+  VITE_PORT: "{{.WAILS_VITE_PORT | default 9245}}"
+
+tasks:
+  ## -------------------------- Build -------------------------- ##
+
+  build:
+    summary: Builds the application
+    cmds:
+      # Build for current OS
+      - task: build:{{OS}}
+
+      # Uncomment to build for specific OSes
+      # - task: build:linux
+      # - task: build:windows
+
+  ## ------> Windows <-------
+
+  build:windows:
+    summary: Builds the application for Windows
+    deps:
+      - task: go:mod:tidy
+      - task: build:frontend
+        vars:
+          BUILD_FLAGS: "{{.BUILD_FLAGS}}"
+      - task: generate:icons
+      - task: generate:syso
+        vars:
+          ARCH: "{{.ARCH}}"
+    cmds:
+      - go build {{.BUILD_FLAGS}} -o {{.BIN_DIR}}/rlbotgui.exe
+    vars:
+      BUILD_FLAGS: '{{if eq .PRODUCTION "true"}}-tags production -trimpath -ldflags="-w -s -H windowsgui"{{else}}-gcflags=all="-l"{{end}}'
+    env:
+      GOOS: windows
+      CGO_ENABLED: 0
+      GOARCH: "{{.ARCH | default ARCH}}"
+      PRODUCTION: '{{.PRODUCTION | default "false"}}'
+
+  build:windows:prod:arm64:
+    summary: Creates a production build of the application
+    cmds:
+      - task: build:windows
+        vars:
+          ARCH: arm64
+          PRODUCTION: "true"
+
+  build:windows:prod:amd64:
+    summary: Creates a production build of the application
+    cmds:
+      - task: build:windows
+        vars:
+          ARCH: amd64
+          PRODUCTION: "true"
+
+  build:windows:debug:arm64:
+    summary: Creates a debug build of the application
+    cmds:
+      - task: build:windows
+        vars:
+          ARCH: arm64
+
+  build:windows:debug:amd64:
+    summary: Creates a debug build of the application
+    cmds:
+      - task: build:windows
+        vars:
+          ARCH: amd64
+
+  ## ------> Linux <-------
+
+  build:linux:
+    summary: Builds the application for Linux
+    deps:
+      - task: go:mod:tidy
+      - task: build:frontend
+        vars:
+          BUILD_FLAGS: "{{.BUILD_FLAGS}}"
+      - task: generate:icons
+        vars:
+          ARCH: "{{.ARCH}}"
+    cmds:
+      - go build {{.BUILD_FLAGS}} -o {{.BIN_DIR}}/rlbotgui
+    vars:
+      BUILD_FLAGS: '{{if eq .PRODUCTION "true"}}-tags production -trimpath -ldflags="-w -s"{{else}}-gcflags=all="-l"{{end}}'
+    env:
+      GOOS: linux
+      CGO_ENABLED: 1
+      GOARCH: "{{.ARCH | default ARCH}}"
+      PRODUCTION: '{{.PRODUCTION | default "false"}}'
+
+  build:linux:prod:arm64:
+    summary: Creates a production build of the application
+    cmds:
+      - task: build:linux
+        vars:
+          ARCH: arm64
+          PRODUCTION: "true"
+
+  build:linux:prod:amd64:
+    summary: Creates a production build of the application
+    cmds:
+      - task: build:linux
+        vars:
+          ARCH: amd64
+          PRODUCTION: "true"
+
+  build:linux:debug:arm64:
+    summary: Creates a debug build of the application
+    cmds:
+      - task: build:linux
+        vars:
+          ARCH: arm64
+
+  build:linux:debug:amd64:
+    summary: Creates a debug build of the application
+    cmds:
+      - task: build:linux
+        vars:
+          ARCH: amd64
+
+  ## -------------------------- Misc -------------------------- ##
+
+  generate:icons:
+    summary: Generates Windows `.ico` and Mac `.icns` files from an image
+    dir: build
+    sources:
+      - "appicon.png"
+    generates:
+      - "icons.icns"
+      - "icons.ico"
+    cmds:
+      # Generates both .ico and .icns files
+      - wails3 generate icons -input appicon.png
+
+  install:frontend:deps:
+    summary: Install frontend dependencies
+    dir: frontend
+    sources:
+      - package.json
+      - package-lock.json
+    generates:
+      - node_modules/*
+    preconditions:
+      - sh: pnpm version
+        msg: "Looks like pnpm isn't installed."
+    cmds:
+      # - npm install --silent --no-progress
+      - pnpm install
+
+  build:frontend:
+    summary: Build the frontend project
+    dir: frontend
+    sources:
+      - "**/*"
+    generates:
+      - dist/*
+    deps:
+      - install:frontend:deps
+      - task: generate:bindings
+        vars:
+          BUILD_FLAGS: "{{.BUILD_FLAGS}}"
+    cmds:
+      - pnpm run build # -q
+
+  generate:bindings:
+    summary: Generates bindings for the frontend
+    sources:
+      - "**/*.go"
+      - go.mod
+      - go.sum
+    generates:
+      - "frontend/bindings/**/*"
+    cmds:
+      # For a complete list of options, run `wails3 generate bindings -help`
+      - wails3 generate bindings -f '{{.BUILD_FLAGS}}'
+
+  go:mod:tidy:
+    summary: Runs `go mod tidy`
+    internal: true
+    generates:
+      - go.sum
+    sources:
+      - go.mod
+    cmds:
+      - go mod tidy
+
+  # ----------------------- dev ----------------------- #
+
+  run:
+    summary: Runs the application
+    cmds:
+      - task: run:{{OS}}
+
+  run:windows:
+    cmds:
+      - '{{.BIN_DIR}}\\{{.APP_NAME}}.exe'
+
+  run:linux:
+    cmds:
+      - "{{.BIN_DIR}}/{{.APP_NAME}}"
+
+  dev:frontend:
+    summary: Runs the frontend in development mode
+    dir: frontend
+    deps:
+      - task: install:frontend:deps
+    cmds:
+      - pnpm run dev --port {{.VITE_PORT}}
+
+  dev:
+    summary: Runs the application in development mode
+    cmds:
+      - wails3 dev -config ./build/devmode.config.yaml -port {{.VITE_PORT}}
+
+  dev:reload:
+    summary: Reloads the application
+    cmds:
+      - task: run

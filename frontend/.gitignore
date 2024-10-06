@@ -13,4 +13,4 @@ dist/
 .idea
 
 # Wails
-wailsjs
+bindings

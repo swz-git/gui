@@ -4,11 +4,11 @@
     import closeIcon from "../../assets/close.svg";
     import type { DraggableBotInfo } from "../..";
     const flipDurationMs = 100;
-    function handleSort(e) {
+    function handleSort(e: any) {
         items = e.detail.items;
     }
     export let items: DraggableBotInfo[] = [];
-    function remove(id) {
+    function remove(id: number): any {
         items = items.filter((x) => x.id !== id);
     }
 </script>

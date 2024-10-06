@@ -1,10 +1,10 @@
-<script>
+<script lang="ts">
     import Select from "../NiceSelect.svelte";
     import Modal from "../Modal.svelte";
     import maps from "../../arena-names.js";
-    import { mutators as mutatorOptions } from "./rlmutators.js";
+    import { mutators as mutatorOptions } from "./rlmutators";
 
-    export let map = localStorage.getItem("MS_MAP") || maps.DFH_Stadium;
+    export let map = localStorage.getItem("MS_MAP") || maps.DFHStadium;
     $: {
         console.log(map);
         localStorage.setItem("MS_MAP", map);
@@ -32,26 +32,21 @@
         localStorage.setItem("MS_MUTATORS", JSON.stringify(mutators));
     }
 
-    function cleanCamelCase(toClean) {
+    function cleanCamelCase(toClean: string) {
         return toClean
             .replace(/[A-Z]/g, (letter) => ` ${letter.toLowerCase()}`)
             .replace(/^[a-z]/, (letter) => letter.toUpperCase());
     }
 
-    export let onStart = () => {};
-    export let onStop = () => {};
+    export let onStart: () => any = () => {};
+    export let onStop: () => any = () => {};
 </script>
 
 <div class="matchSettings">
     <h1>Match Settings</h1>
     <div class="content">
         <div class="settings">
-            <Select
-                class="select"
-                options={maps}
-                bind:value={map}
-                placeholder="Select map"
-            />
+            <Select options={maps} bind:value={map} placeholder="Select map" />
             <Select
                 options={Object.fromEntries(modes.map((x) => [x, x]))}
                 bind:value={mode}

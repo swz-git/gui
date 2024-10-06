@@ -8,6 +8,7 @@
     "preview": "rsbuild preview"
   },
   "dependencies": {
+    "@wailsio/runtime": "3.0.0-alpha.27",
     "svelte": "^4.2.10",
     "svelte-dnd-action": "^0.9.49",
     "svelte-french-toast": "^1.2.0",

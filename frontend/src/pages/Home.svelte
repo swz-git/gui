@@ -1,11 +1,7 @@
 <script lang="ts">
-    import {
-        GetBots,
-        PickFolder,
-        StartMatch,
-        StopMatch,
-    } from "../../wailsjs/go/main/App.js";
-    import type * as go from "../../wailsjs/go/models";
+    // @ts-ignore
+    import { App, type StartMatchOptions } from "../../bindings/gui/index.js";
+    /** @import * from '../../bindings/gui' */
     import toast from "svelte-french-toast";
     // @ts-ignore
     import arenaImages from "../arena-images.ts";
@@ -35,7 +31,7 @@
         loadingBots = true;
         let internalUpdateTime = new Date();
         latestBotUpdateTime = internalUpdateTime;
-        const result = await GetBots(paths);
+        const result = await App.GetBots(paths);
         if (latestBotUpdateTime !== internalUpdateTime) {
             return; // if newer "search" already started, dont write old data
         }
@@ -65,20 +61,19 @@
     let mutatorSettings: any;
 
     async function onMatchStart() {
-        // @ts-ignore
-        let options: go.main.StartMatchOptions = {
+        let options: StartMatchOptions = {
             map,
             gameMode: mode,
-            blueBots,
-            orangeBots,
+            bluePlayers: blueBots,
+            orangePlayers: orangeBots,
             mutatorSettings,
         };
-        console.log("starting with options", options);
+
         toast("Starting match...", {
             position: "bottom-right",
         });
-        console.log(options);
-        let response = await StartMatch(options);
+
+        let response = await App.StartMatch(options);
 
         if (response.success) {
             toast.success("Sent start match command", {
@@ -97,7 +92,7 @@
         toast("Stopping match...", {
             position: "bottom-right",
         });
-        let response = await StopMatch(false);
+        let response = await App.StopMatch(false);
 
         if (response.success) {
             toast.success("Sent stop match command", {
@@ -137,7 +132,7 @@
                     {/each}
                     <button
                         on:click={async () => {
-                            let result = await PickFolder();
+                            let result = await App.PickFolder();
                             console.log("PickFolder returned:", result);
                             if (result != "") {
                                 paths = [...paths, result];

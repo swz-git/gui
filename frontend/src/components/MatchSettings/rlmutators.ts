@@ -1,4 +1,4 @@
-export const mutators = {
+export const mutators: { [x: string]: string[] } = {
   game_mode: [
     "Soccer",
     "Hoops",
