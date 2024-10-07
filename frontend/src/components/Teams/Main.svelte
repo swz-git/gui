@@ -38,7 +38,7 @@
         flex: 1;
         padding: 0px 0;
         /* Nice transparent blur */
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0.7);
         -webkit-backdrop-filter: blur(10px);
         backdrop-filter: blur(10px);
         display: flex;

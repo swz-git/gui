@@ -75,13 +75,13 @@
         display: flex;
         align-items: center;
         background-color: var(--background-alt);
-        height: 2rem;
+        height: 2.25rem;
         padding: 0.2rem;
         gap: 0.5rem;
         border-radius: 0.2rem;
     }
     .bot img {
-        height: 1.8rem;
+        height: 2rem;
         width: auto;
     }
     .close {

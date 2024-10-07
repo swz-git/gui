@@ -210,9 +210,9 @@
     }
 
     button.start {
-        background-color: darkgreen;
+        background-color: #15680e;
     }
     button.stop {
-        background-color: darkred;
+        background-color: #cc1414;
     }
 </style>

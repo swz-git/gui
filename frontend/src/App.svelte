@@ -61,6 +61,7 @@
     }
     h1 {
         margin: 0px;
+        margin-bottom: 0.2rem;
     }
     .logo {
         height: 3rem;

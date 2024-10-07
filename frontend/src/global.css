@@ -1,12 +1,12 @@
 :root {
-    --background: #161616;
-    --background-but: #2e2e2e;
-    --background-alt: #2f2f2f;
+    --background: #0a0e14;
+    --background-but: #1a1f26;
+    --background-alt: #1a1f26;
     --background-opp: var(--foreground-alt);
     --background-opp-alt: var(--foreground);
 
-    --foreground: #f0f0f0;
-    --foreground-alt: #d0d0d0;
+    --foreground: #dee6f2;
+    --foreground-alt: #a4a9b2;
     --foreground-opp: var(--background-alt);
     --foreground-opp-alt: var(--background);
 
