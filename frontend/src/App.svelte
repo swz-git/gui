@@ -1,6 +1,6 @@
 <script lang="ts">
     import Home from "./pages/Home.svelte";
-    import logo from "./assets/rlbot.png";
+    import logo from "./assets/rlbot_logo.svg";
     import { Toaster } from "svelte-french-toast";
 
     const activePage = "home";
@@ -65,7 +65,7 @@
     .logo {
         height: 3rem;
         margin-right: 0.2rem;
-        padding: 0.2rem;
+        padding: 0.3rem;
     }
     .navbuttons > * {
         margin: 0px 0.25rem;
