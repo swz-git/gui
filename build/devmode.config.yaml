@@ -24,7 +24,7 @@ config:
       type: background
     - cmd: go mod tidy
       type: blocking
-    # - cmd: wails3 task build
-    #   type: blocking
+    - cmd: wails3 task build:go
+      type: blocking
     - cmd: wails3 task run
       type: primary

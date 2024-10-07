@@ -18,13 +18,22 @@ tasks:
       # - task: build:linux
       # - task: build:windows
 
+  build:go:
+    summary: Builds the application without frontend
+    cmds:
+      # Build for current OS
+      - task: build:{{OS}}:go
+
+      # Uncomment to build for specific OSes
+      # - task: build:linux
+      # - task: build:windows
+
   ## ------> Windows <-------
 
-  build:windows:
-    summary: Builds the application for Windows
+  build:windows:go:
+    summary: Builds the application without frontend for Windows
     deps:
       - task: go:mod:tidy
-      - task: build:frontend
         vars:
           BUILD_FLAGS: "{{.BUILD_FLAGS}}"
       - task: generate:icons
@@ -40,6 +49,15 @@ tasks:
       CGO_ENABLED: 0
       GOARCH: "{{.ARCH | default ARCH}}"
       PRODUCTION: '{{.PRODUCTION | default "false"}}'
+
+  build:windows:
+    summary: Builds the application for Windows
+    deps:
+      - task: build:frontend
+        vars:
+          BUILD_FLAGS: "{{.BUILD_FLAGS}}"
+    cmds:
+      - task: build:windows:go
 
   build:windows:prod:arm64:
     summary: Creates a production build of the application
@@ -71,13 +89,20 @@ tasks:
         vars:
           ARCH: amd64
 
+  generate:syso:
+    summary: Generates Windows `.syso` file
+    dir: build
+    cmds:
+      - wails3 generate syso -arch {{.ARCH}} -icon icon.ico -manifest wails.exe.manifest -info info.json -out ../wails.syso
+    vars:
+      ARCH: "{{.ARCH | default ARCH}}"
+
   ## ------> Linux <-------
 
-  build:linux:
-    summary: Builds the application for Linux
+  build:linux:go:
+    summary: Builds the application without the frontend for Linux
     deps:
       - task: go:mod:tidy
-      - task: build:frontend
         vars:
           BUILD_FLAGS: "{{.BUILD_FLAGS}}"
       - task: generate:icons
@@ -92,6 +117,15 @@ tasks:
       CGO_ENABLED: 1
       GOARCH: "{{.ARCH | default ARCH}}"
       PRODUCTION: '{{.PRODUCTION | default "false"}}'
+
+  build:linux:
+    summary: Builds the application for Linux
+    deps:
+      - task: build:frontend
+        vars:
+          BUILD_FLAGS: "{{.BUILD_FLAGS}}"
+    cmds:
+      - task: build:linux:go
 
   build:linux:prod:arm64:
     summary: Creates a production build of the application
@@ -136,6 +170,7 @@ tasks:
     cmds:
       # Generates both .ico and .icns files
       - wails3 generate icons -input appicon.png
+      - rm icons.icns # remove mac icons
 
   install:frontend:deps:
     summary: Install frontend dependencies
